@@ -3,6 +3,8 @@ package Service;
 import DAO.AccountDAO;
 import Model.Account;
 import java.util.List;
+import io.javalin.http.Context;
+import io.javalin.Javalin;
 
 public class AccountService {
 
@@ -15,24 +17,23 @@ public class AccountService {
     public AccountService(AccountDAO accountDAO){
         this.accountDAO = accountDAO;
     }
-        // we need to insert he second methodi made
-    public Account Newuser( String username, String password) {
-        if (username == null || username.trim().isEmpty())  {
-            return null;
-        }
-        if (password == null || password.length() < 4) {
-            return null;
-        }
-        if (accountDAO.usernameExists(username)) {
-            return null;
-        }
-
-
-        Account newAccount = new Account(username, password);
-        
-        return accountDAO.addAccount(newAccount) ;
-
+ 
+public Account newUser(String username,String password) 
+{
+    if (username == null || username.trim().isEmpty())
+    {
+        return null;
     }
-
-
+    else if(password == null || password.length() < 4)
+    {
+        return null;
+    }
+    else if(accountDAO.usernameExists(username))
+    {
+        return null;
+    }
+    
+    return accountDAO.addAccount(username,password);
+    
+}
 }

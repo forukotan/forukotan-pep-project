@@ -7,13 +7,13 @@ import java.util.List;
 import Model.Account;
 import Util.ConnectionUtil;
 
-
+// maybe try to change return tye from boolean to Account
 public class AccountDAO {
     public boolean usernameExists(String username) {
         Connection connection = ConnectionUtil.getConnection();
         try
         {
-        String sql = "SELECT COUNT(*) FROM accounts WHERE username = ?";
+        String sql = "SELECT COUNT(*) FROM account WHERE username = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
 
@@ -35,8 +35,9 @@ public class AccountDAO {
 
 
 
-    public Account addAccount(Account account){
+    public Account addAccount(String username, String password){
         Connection connection = ConnectionUtil.getConnection();
+        Account account = new Account();
         try
         {
             //we do insert to add to the username and password column, but we need to get the user id which is auto-generated
@@ -45,14 +46,14 @@ public class AccountDAO {
             String sql ="INSERT INTO Account (username, password) values (?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); 
 
-            preparedStatement.setString(1, account.getUsername());
-            preparedStatement.setString(2, account.getPassword());
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
 
             preparedStatement.executeUpdate();
             ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
             if(pkeyResultSet.next()){
                 int generatedAccountId = pkeyResultSet.getInt(1);
-                return new Account(generatedAccountId, account.getUsername(), account.getPassword());
+                return new Account(generatedAccountId, username, password);
             }
 
 
