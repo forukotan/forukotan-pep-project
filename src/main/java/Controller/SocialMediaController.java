@@ -43,7 +43,7 @@ public class SocialMediaController {
        app.post("/login",this::userLogin);
        app.post("/messages", this::messageNew);
        app.get("/messages", this::getAllMessages);
-       app.get("/message",this::messageWithID);
+       app.get("/messages/{message_id}",this::messageWithID);
         return app;
     }
 
@@ -110,7 +110,7 @@ public class SocialMediaController {
         if (message != null) {
             context.json(message);
         } else {
-            context.status(404); 
+            context.result(""); 
         }
     }
 
