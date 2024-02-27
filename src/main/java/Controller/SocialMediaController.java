@@ -1,6 +1,10 @@
 package Controller;
 
+import java.util.List;
+
 import Model.Account;
+import Model.Message;
+import Service.MessageService;
 import Service.AccountService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -14,14 +18,19 @@ import io.javalin.http.Handler;
 public class SocialMediaController {
 
     AccountService accountService;
+    MessageService messageService;
 
     public SocialMediaController(){
         this.accountService = new AccountService();
+        this.messageService = new MessageService();
     }
 
-    public SocialMediaController(AccountService accountService){
+    public SocialMediaController(AccountService accountService,MessageService messageService){
         this.accountService = accountService;
+        this.messageService = messageService;
     }
+
+    
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
@@ -31,7 +40,10 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
        // POST localhost:8080/register
        app.post("/register", this::userRegister);
-       
+       app.post("/login",this::userLogin);
+       app.post("/messages", this::messageNew);
+       app.get("/messages", this::getAllMessages);
+       app.get("/message",this::messageWithID);
         return app;
     }
 
@@ -47,6 +59,21 @@ public class SocialMediaController {
         }
 
    }
+   private void userLogin(Context context)
+   {
+    Account accountBody =context.bodyAsClass(Account.class);
+    Account loginUser = accountService.loginVerify(accountBody.username, accountBody.password);
+    if(loginUser!= null)
+    {
+        context.json(loginUser);
+    }
+    else
+    {
+        context.status(401);
+    }
+    
+
+   }
 
 
     /**
@@ -57,6 +84,35 @@ public class SocialMediaController {
         context.json("sample text");
     }
 
+    private void messageNew(Context context)
+    {
+        Message messageBody = context.bodyAsClass(Message.class);
+        Message messageMade = messageService.newMessage(messageBody.getPosted_by(),messageBody.getMessage_text(),messageBody.getTime_posted_epoch());
+        if(messageMade!= null)
+    {
+        context.json(messageMade);
+    }
+    else
+    {
+        context.status(400);
+    }
+    
+    }
+    private void getAllMessages(Context context)
+    {
+        List<Message> messages = messageService.allMessages();
+        context.json(messages);
+    }
+    private void messageWithID(Context context)
+    {
+        int messageId = Integer.parseInt(context.pathParam("message_id"));
+        Message message = messageService.messageBytheID(messageId);
+        if (message != null) {
+            context.json(message);
+        } else {
+            context.status(404); 
+        }
+    }
 
 }
 

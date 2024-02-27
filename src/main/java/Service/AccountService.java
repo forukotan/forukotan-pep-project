@@ -36,4 +36,13 @@ public Account newUser(String username,String password)
     return accountDAO.addAccount(username,password);
     
 }
+public Account loginVerify(String username,String password){
+    return accountDAO.loginUser(username, password);
 }
+
+
+
+
+}
+
+
