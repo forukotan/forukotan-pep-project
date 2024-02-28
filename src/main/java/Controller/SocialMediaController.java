@@ -46,6 +46,7 @@ public class SocialMediaController {
        app.get("/messages/{message_id}",this::messageWithID);
        app.delete("/messages/{message_id}", this::deleteMessage);
        app.patch("/messages/{message_id}", this::updateMessage);
+       app.get("/accounts/{account_id}/messages", this::retrieveByUsers);
         return app;
     }
 
@@ -138,6 +139,13 @@ public class SocialMediaController {
         } else {
             context.status(400).result("");
         }
+    }
+
+    private void retrieveByUsers(Context context)
+    {
+        int accountId = Integer.parseInt(context.pathParam("account_id"));
+    List<Message> messages = messageService.messageByUser(accountId);
+    context.json(messages);
     }
     
 }

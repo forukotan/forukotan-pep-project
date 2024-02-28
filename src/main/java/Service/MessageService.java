@@ -70,6 +70,11 @@ public class MessageService {
         return messageDAO.updateMessage(messageId, newMessageText);
 
     }
+
+    public List<Message> messageByUser(int accountId)
+    {
+        return messageDAO.retieveByUser(accountId);
+    }
     
 
 
