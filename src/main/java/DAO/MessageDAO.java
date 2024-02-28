@@ -123,5 +123,47 @@ public Message getMessageByID(int messageID)
     return messagebyID;
 }
 
+public boolean deleteMessageById(int messageId) {
+    Connection connection = ConnectionUtil.getConnection();
+    boolean isDeleted = false;
 
+    try {
+        String deleteSql = "DELETE FROM message WHERE message_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(deleteSql);
+        preparedStatement.setInt(1, messageId);
+        //google why quickfix said make this an int instead of result
+        int rowsAffected = preparedStatement.executeUpdate();
+
+        isDeleted = rowsAffected > 0;
+    } catch (SQLException e) {
+        System.out.println(e.getMessage());
+    }
+
+    return isDeleted;
+}
+
+public Message updateMessage(int messageId, String newMessageText){
+    Connection connection = ConnectionUtil.getConnection();
+    Message updatedMessage = null;
+    try
+    {
+        String sql="Update message Set message_text = ? where message_id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(2,messageId);
+        preparedStatement.setString(1, newMessageText);
+
+        int rows = preparedStatement.executeUpdate();
+        
+        if (rows > 0) {
+            
+            updatedMessage = getMessageByID(messageId);
+            
+        }
+    }catch (SQLException e) {
+        System.out.println(e.getMessage());
+}
+return updatedMessage;
+
+
+}
 }

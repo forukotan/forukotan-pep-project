@@ -28,10 +28,10 @@ public Account newUser(String username,String password)
     {
         return null;
     }
-    else if(accountDAO.usernameExists(username))
-    {
-        return null;
-    }
+    // else if(accountDAO.usernameExists(username))
+    // {
+    //     return null;
+    // }
     
     return accountDAO.addAccount(username,password);
     

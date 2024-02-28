@@ -42,5 +42,37 @@ public class MessageService {
     {
         return messageDAO.getMessageByID(messageId);
     }
+
+    public Message deleteMessage(int messageId) {
+        
+        Message messageToDelete = messageDAO.getMessageByID(messageId);
+    
+        
+        if (messageToDelete != null && messageDAO.deleteMessageById(messageId)) {
+            return messageToDelete;
+        }
+        return null;
+    }
+
+    public Message upMessage(int messageId, String newMessageText){
+
+        
+        if(newMessageText == null || newMessageText.isBlank()|| newMessageText.length() > 255)
+        {
+            return null;
+        }
+        Message checkMessageId= messageDAO.getMessageByID(messageId);
+        if (checkMessageId==null)
+        {
+            return null;
+        }
+        
+        return messageDAO.updateMessage(messageId, newMessageText);
+
+    }
+    
+
+
+
 }
 
